@@ -1,6 +1,8 @@
 package net.rouma;
 import java.util.regex.*;
 
+// TODO 1) comprendre comment fonction maven
+// TODO 2) comprendre pourquoi maven ne peut compiler le projet
 public class PointGPS {
     private double x;
     private double y;
