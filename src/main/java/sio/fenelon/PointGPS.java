@@ -1,9 +1,15 @@
-package net.rouma;
+package sio.fenelon;
+import com.what3words.javawrapper.What3WordsV3;
+import com.what3words.javawrapper.request.Coordinates;
+import com.what3words.javawrapper.response.ConvertTo3WA;
+
 import java.util.regex.*;
 
 // TODO 1) comprendre comment fonction maven
 // TODO 2) comprendre pourquoi maven ne peut compiler le projet
-public class PointGPS {
+public class PointGPS
+{
+    // Attributs
     private double x;
     private double y;
     private double z;
@@ -15,16 +21,36 @@ public class PointGPS {
         this.setX(x);
         this.setY(y);
         this.ville = ville;
-        // il doit être possible de trouver what3words avec des coordonnées GPS...
+        // What3Words from coords
+        this.what3words = getWhat3WordsFromGPS(x, y);
     }
-    public PointGPS() {
 
+    // Constructeur par défaut
+    public PointGPS() {}
+
+    private String getWhat3WordsFromGPS(double x, double y)
+    {
+        // Instanciation de l'objet What3WordsV3
+        What3WordsV3 api = new What3WordsV3("95HDXITI");
+
+        // Convert coordinates to a 3 word address
+        ConvertTo3WA words = api.convertTo3wa(new Coordinates(x, y))
+                .language("fr")
+                .execute();
+
+        // Retourne les mots correspondants aux coordonnées GPS
+        return words.getWords();
     }
-    private String getwhat3wordsFromGPS(double x, double y) {
-        What3WordsV3 what3words = What3Words.withApiKey("VOTRE_CLE_API");
-        return "";
-    }
-    public String getWhat3words() {
+
+    // Accesseurs et mutateurs
+    public String getWhat3words()
+    {
+        // Si l'attribut what3words est null, on le cherche (les coordonnées GPS sont connues)
+        if (this.what3words == null && this.x != 0 && this.y != 0) {
+            this.what3words = getWhat3WordsFromGPS(this.x, this.y);
+        }
+
+        // Retourne la valeur de l'attribut what3words
         return this.what3words;
     }
     public void setWhat3words(String what3words) {
